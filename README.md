@@ -55,4 +55,3 @@ fl-pixel-midi-art/
 ## 开源协议 / License
 
 [MIT](LICENSE)
-*（内容由AI生成，仅供参考）*
