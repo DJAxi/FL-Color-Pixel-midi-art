@@ -5,16 +5,6 @@ An image-to-FL-Studio pixel art MIDI converter. Drop in an image, get a colorful
 
 全程本地处理，图片不会上传到任何服务器。Everything runs locally in your browser; no image is ever uploaded.
 
-## 在线体验 / Live Demo
-
-开启 GitHub Pages 后，通过以下地址在线使用：
-
-```
-https://<你的用户名>.github.io/fl-pixel-midi-art/
-```
-
-也可以直接下载本仓库，双击 `index.html` 在浏览器中打开使用（无需安装任何东西）。
-
 ## 功能特性 / Features
 
 - 图片上传即转换：支持 PNG / JPG / WebP，拖拽或点击上传
