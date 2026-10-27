@@ -1,14 +1,3 @@
----
-AIGC:
-    Label: "1"
-    ContentProducer: 001191440300708461136T1XGW3
-    ProduceID: 0a71da3aae3ac49f966b5b87b1beedfd_54fd47f6d1cc11f1a301525400cd780f
-    ReservedCode1: KDvqhzjsC6x7DiK13gXXl4G0EWdnW39nBQGyldE4yv+dBj4wwzGhSvpWiSdZPcV5Q1IcJRFQItEiTtdzdgicLWxMDLlwNp65VInj+Yg9EMMmsjtpkV2yC3uZWgjfnDm0HPlhrgb7UfD46PV/JIA9l0L/TDcKkIZlsPE5BVfgFCDZnS74xajgxzD1ppA=
-    ContentPropagator: 001191440300708461136T1XGW3
-    PropagateID: 0a71da3aae3ac49f966b5b87b1beedfd_54fd47f6d1cc11f1a301525400cd780f
-    ReservedCode2: KDvqhzjsC6x7DiK13gXXl4G0EWdnW39nBQGyldE4yv+dBj4wwzGhSvpWiSdZPcV5Q1IcJRFQItEiTtdzdgicLWxMDLlwNp65VInj+Yg9EMMmsjtpkV2yC3uZWgjfnDm0HPlhrgb7UfD46PV/JIA9l0L/TDcKkIZlsPE5BVfgFCDZnS74xajgxzD1ppA=
----
-
 # 彩色音符画 · FL Pixel MIDI Art
 
 把任意图片变成 FL Studio 钢琴卷帘里的彩色像素画 MIDI。
