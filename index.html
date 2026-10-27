@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片转 FL Studio 像素画 MIDI 工具（Material 版）</title>
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('md-theme');
+    if (t === 'light' || t === 'dark') { document.documentElement.setAttribute('data-theme', t); }
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<header class="appbar">
+  <div class="appbar-inner">
+    <div class="appbar-badge" data-i18n="appbar_badge">MIDI</div>
+    <div class="appbar-title">
+      <div class="main" data-i18n="appbar_title">FL彩色MIDI像素画工具</div>
+    </div>
+    <div class="lang-wrap">
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Language" title="Language">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+      </button>
+      <div class="lang-menu" id="langMenu" hidden>
+        <button class="lang-item" data-lang="zh" type="button">简体中文</button>
+        <button class="lang-item" data-lang="en" type="button">English</button>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button" title="切换深色/浅色模式" aria-label="切换深色/浅色模式">
+      <svg class="icon-sun" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</header>
+<div class="wrap">
+
+  <!-- 第 1 步 -->
+  <section id="step1" class="step-section" style="display:none">
+    <div class="panel" style="flex:1; display:flex; flex-direction:column; min-height:0;">
+      <h2 data-i18n="step1_title">请上传图片</h2>
+      <div class="dropzone" id="dropZone">
+        <div class="dropzone-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0l-4 4m4-4l4 4"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+        <div class="big" data-i18n="upload_big_hint">点击选择图片，或将图片拖到此处</div>
+        <div class="sub" data-i18n="upload_sub_hint">支持 PNG / JPG / WebP 等常见格式，全程本地处理，不会上传到任何服务器</div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+    </div>
+  </section>
+
+  <!-- 第 2 步 -->
+  <section id="step2" class="step-section" style="display:none">
+    <h2 data-i18n="step2_title">调整像素画</h2>
+    <div class="two-col">
+      <div class="panel">
+        <h3 data-i18n="param_title">参数设置</h3>
+        <div class="param-row">
+          <label><span data-i18n="param_grid_w">网格宽度</span><span class="val" id="wVal">128</span></label>
+          <input type="range" id="wSlider" min="1" max="512" value="128" step="1">
+        </div>
+        <div class="param-row">
+          <label><span data-i18n="param_grid_h">网格高度（上限 132）</span><span class="val" id="hVal">128</span></label>
+          <input type="range" id="hSlider" min="1" max="132" value="128" step="1">
+        </div>
+        <div class="param-row">
+          <label><span data-i18n="param_bright">亮度</span><span class="val" id="brightVal">0</span></label>
+          <input type="range" id="brightSlider" min="-100" max="100" value="0" step="1">
+        </div>
+        <div class="param-row">
+          <label><span data-i18n="param_sat">饱和度</span><span class="val" id="satVal">0</span></label>
+          <input type="range" id="satSlider" min="-100" max="100" value="0" step="1">
+        </div>
+        <div class="param-row">
+          <label><span data-i18n="param_cont">对比度</span><span class="val" id="contVal">0</span></label>
+          <input type="range" id="contSlider" min="-100" max="100" value="0" step="1">
+        </div>
+        <div class="param-row">
+          <label><span data-i18n="param_dither">抖动（老游戏机风）</span></label>
+          <select id="ditherSel" class="dither-select">
+            <option value="none" data-i18n="dither_none">无</option>
+            <option value="bayer2" data-i18n="dither_bayer2">2×2 有序抖动</option>
+            <option value="bayer4" data-i18n="dither_bayer4">4×4 有序抖动</option>
+            <option value="blue" data-i18n="dither_blue">蓝噪声</option>
+            <option value="fs" data-i18n="dither_fs">误差扩散</option>
+          </select>
+        </div>
+        <p class="hint" data-i18n="step2_hint">将从图片中自适应提取16种颜色</p>
+      </div>
+      <div class="panel col-preview">
+        <h3 data-i18n="preview_title">像素画预览</h3>
+        <div class="canvas-frame">
+          <canvas id="previewCanvas"></canvas>
+        </div>
+              </div>
+    </div>
+  </section>
+
+  <!-- 第 3 步 -->
+  <section id="step3" class="step-section" style="display:none">
+    <h2 data-i18n="step3_title">预览MIDI</h2>
+    <div class="two-col">
+      <div class="panel" style="display:flex; flex-direction:column; min-height:0;">
+        <h3 data-i18n="piano_controls_title">卷帘控制</h3>
+        <div class="param-row">
+          <label><span data-i18n="param_offset">纵向平移</span><span class="val" id="offsetVal">0</span></label>
+          <div class="piano-toolbar" style="margin-bottom:0">
+            <button class="btn secondary small" id="btnOffsetDown" data-i18n="btn_offset_down">下移 -1</button>
+            <button class="btn secondary small" id="btnOffsetUp" data-i18n="btn_offset_up">上移 +1</button>
+            <span class="muted" style="font-size:12px"><span data-i18n="offset_range_label">范围 0 ~</span> <span id="offsetMaxVal">4</span></span>
+          </div>
+        </div>
+        <div class="swatch-list" id="swatchList3"></div>
+        <div style="margin-top:10px">
+          <button class="btn secondary small" id="btnSoloAll" data-i18n="btn_solo_all">显示全部通道</button>
+        </div>
+      </div>
+      <div class="panel col-preview">
+        <h3 data-i18n="piano_title">钢琴卷帘仿真（固定视野，容器内缩放/平移）</h3>
+        <div class="piano-scroll" id="pianoScroll">
+          <canvas id="pianoCanvas"></canvas>
+        </div>
+        <p class="hint" data-i18n="piano_range_hint">音域为C0到B10,可拖动滚动条查看全部内容。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第 4 步 -->
+  <section id="step4" class="step-section" style="display:none">
+    <div class="panel" style="margin-bottom:12px">
+      <h3 data-i18n="export_title">导出操作</h3>
+      <div class="export-buttons">
+        <button class="btn" id="btnExportSingle" data-i18n="btn_export_single">导出单个 16 通道 MIDI</button>
+        <button class="btn secondary" id="btnExportNcp" data-i18n="btn_export_ncp">导出调色盘 .ncp</button>
+        <button class="btn purple" id="btnExportZip" data-i18n="btn_export_zip">一键打包 ZIP</button>
+      </div>
+      <p class="hint" data-i18n="export_ncp_hint">请将.mid直接拖入钢琴卷帘，再点击钢琴卷帘窗口左上角三角>视图>音符颜色>浏览预设值，导入.ncp文件。</p>
+    </div>
+    <div class="panel colors-panel" style="flex:1; min-height:0; display:flex; flex-direction:column;">
+      <h3 data-i18n="swatches_title">颜色（按 FL 钢琴卷帘颜色编辑器顺序）</h3>
+      <div class="swatch-grid" id="swatchList4"></div>
+          </div>
+  </section>
+
+  <!-- 右下角向导导航 -->
+  <div class="wizard-nav" id="wizardNav">
+    <button class="btn secondary" id="btnPrev" disabled data-i18n="btn_prev">返回</button>
+    <button class="btn" id="btnNext">下一步</button>
+  </div>
+
+</div>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>
